@@ -9,8 +9,6 @@ import org.springframework.context.ApplicationContext;
 public class LikelionSpringApplication {
 
     public static void main(String[] args) {
-        ApplicationContext context = SpringApplication.run(LikelionSpringApplication.class, args);
-
-        MemberService memberService = context.getBean(MemberService.class);
+        SpringApplication.run(LikelionSpringApplication.class, args);
     }
 }
