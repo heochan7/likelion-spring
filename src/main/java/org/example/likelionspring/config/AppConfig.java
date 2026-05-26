@@ -4,8 +4,9 @@ import org.example.likelionspring.repository.MemberRepository;
 import org.example.likelionspring.repository.MemoryMemberRepository;
 import org.example.likelionspring.service.MemberService;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-//@Configuration
+@Configuration
 public class AppConfig {
     @Bean
     public MemberRepository memberRepository() {

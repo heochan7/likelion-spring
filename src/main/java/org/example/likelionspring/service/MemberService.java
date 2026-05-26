@@ -8,12 +8,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+//@Service
 public class MemberService {
     // 인터페이스에 의존 (구현체에 의존하지 않음)
     private final MemberRepository repository;
 
-    @Autowired
+//    @Autowired
     public MemberService(MemberRepository repository) {
         this.repository = repository;
     }
