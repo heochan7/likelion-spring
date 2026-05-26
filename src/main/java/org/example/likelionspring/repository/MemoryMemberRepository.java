@@ -2,7 +2,6 @@ package org.example.likelionspring.repository;
 
 import org.example.likelionspring.role.Role;
 import org.springframework.stereotype.Repository;
-
 import java.util.ArrayList;
 import java.util.List;
 
