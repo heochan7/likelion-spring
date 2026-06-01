@@ -1,7 +1,4 @@
-package org.example.likelionspring.role;
-
-
-import org.example.likelionspring.policy.SubmissionPolicy;
+package org.example.likelionspring.domain.role;
 
 public abstract class Role {
     private String name;
@@ -30,12 +27,6 @@ public abstract class Role {
 
     public final String getPart() {
         return part;
-    }
-
-    public abstract SubmissionPolicy submissionPolicy();
-
-    public boolean canSubmitAssignment() {
-        return submissionPolicy().canSubmit();
     }
 
     public abstract String roleName();
