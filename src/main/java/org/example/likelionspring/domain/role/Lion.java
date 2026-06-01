@@ -1,8 +1,4 @@
-package org.example.likelionspring.role;
-
-
-import org.example.likelionspring.policy.LionSubmissionPolicy;
-import org.example.likelionspring.policy.SubmissionPolicy;
+package org.example.likelionspring.domain.role;
 
 public class Lion extends Role {
     private String studentId;
@@ -14,11 +10,6 @@ public class Lion extends Role {
 
     public String getStudentId() {
         return studentId;
-    }
-
-    @Override
-    public SubmissionPolicy submissionPolicy() {
-        return new LionSubmissionPolicy();
     }
 
     @Override

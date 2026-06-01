@@ -1,8 +1,4 @@
-package org.example.likelionspring.role;
-
-
-import org.example.likelionspring.policy.StaffSubmissionPolicy;
-import org.example.likelionspring.policy.SubmissionPolicy;
+package org.example.likelionspring.domain.role;
 
 public class Staff extends Role {
     private String position;
@@ -16,10 +12,6 @@ public class Staff extends Role {
         return position;
     }
 
-    @Override
-    public SubmissionPolicy submissionPolicy() {
-        return new StaffSubmissionPolicy();
-    }
 
     @Override
     public String roleName() {

@@ -1,17 +1,32 @@
 package org.example.likelionspring.repository;
 
-import org.example.likelionspring.role.Role;
+import org.example.likelionspring.domain.role.Role;
 import org.springframework.stereotype.Repository;
+
 import java.util.ArrayList;
 import java.util.List;
 
-//@Repository
+@Repository
 public class MemoryMemberRepository implements MemberRepository {
     private List<Role> members = new ArrayList<>();
 
     @Override
     public void save(Role member) {
         members.add(member);
+    }
+
+    @Override
+    public void updateByName(String name, Role member) {
+        for (Role role : members) {
+            if (role.getName().equals(name)) {
+                members.set(members.indexOf(role), member);
+            }
+        }
+    }
+
+    @Override
+    public boolean deleteByName(String name) {
+        return members.removeIf(member -> member.getName().equals(name));
     }
 
     @Override
