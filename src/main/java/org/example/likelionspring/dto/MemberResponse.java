@@ -1,27 +1,26 @@
 package org.example.likelionspring.dto;
 
-import org.example.likelionspring.domain.role.Lion;
+import org.example.likelionspring.domain.Member;
 
-public class LionResponse {
-    //name, major, generation, part, roleName, studentId
+public class MemberResponse {
     private String name;
     private String major;
     private int generation;
     private String part;
-    private String roleName;
     private String studentId;
+    private String position;
 
-    private LionResponse(Lion lion) {
-        this.name = lion.getName();
-        this.major = lion.getMajor();
-        this.generation = lion.getGeneration();
-        this.part = lion.getPart();
-        this.roleName = lion.roleName();
-        this.studentId = lion.getStudentId();
+    private MemberResponse(Member member){
+        this.name = member.getName();
+        this.major = member.getMajor();
+        this.generation = member.getGeneration();
+        this.part = member.getPart();
+        this.studentId = member.getStudentId();
+        this.position = member.getPosition();
     }
 
-    public static LionResponse from(Lion lion) {
-        return new LionResponse(lion);
+    public static MemberResponse from(Member member){
+        return new MemberResponse(member);
     }
 
     public String getName() {
@@ -56,19 +55,19 @@ public class LionResponse {
         this.part = part;
     }
 
-    public String getRoleName() {
-        return roleName;
-    }
-
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
-    }
-
     public String getStudentId() {
         return studentId;
     }
 
     public void setStudentId(String studentId) {
         this.studentId = studentId;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 }

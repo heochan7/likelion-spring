@@ -1,14 +1,14 @@
 package org.example.likelionspring.repository;
 
-import org.example.likelionspring.domain.role.Role;
+import org.example.likelionspring.domain.Member;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
-public interface MemberRepository {
-    void save(Role member);
-    Role findByName(String name);
-    List<Role> findAll();
-    boolean existsByName(String name);
-    void updateByName(String name, Role member);
-    boolean deleteByName(String name);
+@Repository
+
+public interface MemberRepository extends JpaRepository<Member, Long> {
+    Optional<Member> findByName(String name);
+    Boolean existsByName(String name);
 }
