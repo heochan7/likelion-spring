@@ -1,16 +1,14 @@
 package org.example.likelionspring.service;
 
-
-import org.example.likelionspring.domain.role.Lion;
-import org.example.likelionspring.domain.role.Staff;
+import org.example.likelionspring.domain.Member;
+import org.example.likelionspring.domain.RoleType;
 import org.example.likelionspring.dto.*;
 import org.example.likelionspring.repository.MemberRepository;
-import org.example.likelionspring.domain.role.Role;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Member;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MemberService {
@@ -20,55 +18,106 @@ public class MemberService {
         this.repository = repository;
     }
 
-    public LionResponse createLion(LionCreateRequest req) {
-        Lion member = new Lion(req.getName(), req.getMajor(), req.getGeneration(), req.getPart(), req.getStudentId());
-        return register(member) ? LionResponse.from(member) : null;
-    }
-
-    public StaffResponse createStaff(StaffCreateRequest req) {
-        Staff member = new Staff(req.getName(), req.getMajor(), req.getGeneration(), req.getPart(), req.getPosition());
-        return register(member) ? StaffResponse.from(member) : null;
-    }
-
-    public LionResponse updateLion(String name, LionUpdateRequest req) {
-        Lion member = new Lion(name, req.getMajor(), req.getGeneration(), req.getPart(), req.getStudentId());
-        return update(member) ? LionResponse.from(member) : null;
-    }
-
-    public StaffResponse updateStaff(String name, StaffUpdateRequest req) {
-        Staff member = new Staff(name, req.getMajor(), req.getGeneration(), req.getPart(), req.getPosition());
-        return update(member) ? StaffResponse.from(member) : null;
-    }
-
-    public boolean deleteMember(String name){
-        return repository.deleteByName(name);
-    }
-
-    private boolean update(Role member){
-        if(! repository.existsByName(member.getName())){
-            return false;
+    // 1. Lion 등록
+    public MemberResponse registerLion(LionCreateRequest req) {
+        if (isDuplicateName(req.getName())) {
+            return null;
         }
-        repository.updateByName(member.getName(), member);
-        return true;
+
+        Member lion = new Member(
+                req.getName(),
+                req.getMajor(),
+                req.getPart(),
+                req.getGeneration(),
+                RoleType.LION,
+                req.getStudentId(),
+                null
+        );
+
+        repository.save(lion);
+        return MemberResponse.from(lion);
     }
 
-    private boolean register(Role member) {
-        if (repository.existsByName(member.getName())) {
-            return false;
+    // 2. Staff 등록
+    public MemberResponse registerStaff(StaffCreateRequest req) {
+        if (isDuplicateName(req.getName())) {
+            return null;
         }
+
+        Member staff = new Member(
+                req.getName(),
+                req.getMajor(),
+                req.getPart(),
+                req.getGeneration(),
+                RoleType.STAFF,
+                null,
+                req.getPosition()
+        );
+
+        repository.save(staff);
+        return MemberResponse.from(staff);
+    }
+
+    // 3. Lion 수정
+    public MemberResponse updateLion(Long id, LionUpdateRequest req) {
+        Member member = repository.findById(id).orElse(null);
+        if (member == null) {
+            return null;
+        }
+
+        member.updateInfo(req.getMajor(), req.getGeneration(), req.getPart());
+        member.updateStudentId(req.getStudentId());
+
         repository.save(member);
+        return MemberResponse.from(member);
+    }
+
+    // 4. Staff 수정
+    public MemberResponse updateStaff(Long id, StaffUpdateRequest req) {
+        Member member = repository.findById(id).orElse(null);
+        if (member == null) {
+            return null;
+        }
+
+        member.updateInfo(req.getMajor(), req.getGeneration(), req.getPart());
+        member.updatePosition(req.getPosition());
+
+        repository.save(member);
+        return MemberResponse.from(member);
+    }
+
+    // 5. 단건 조회
+    public MemberResponse getMember(Long id) {
+        Member member = repository.findById(id).orElse(null);
+        if (member == null) {
+            return null;
+        }
+        return MemberResponse.from(member);
+    }
+
+    // 6. 삭제
+    public boolean deleteMember(Long id) {
+        Member member = repository.findById(id).orElse(null);
+        if (member == null) {
+            return false;
+        }
+        repository.delete(member);
         return true;
     }
 
-    public Role searchByName(String name) {
-        return repository.findByName(name);
+    // 7. 전체 조회
+    public List<MemberResponse> getAllMembers() {
+        List<Member> members = repository.findAll();
+        if (members.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return members.stream()
+                .map(MemberResponse::from)
+                .collect(Collectors.toList());
     }
 
-    private List<Role> getAllMembers() {
-        return repository.findAll();
-    }
-
-    private boolean isEmpty() {
-        return repository.findAll().isEmpty();
+    // 중복 여부 확인 함수
+    private boolean isDuplicateName(String name) {
+        return repository.existsByName(name);
     }
 }
