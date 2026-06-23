@@ -1,10 +1,10 @@
-package org.example.likelionspring.dto;
+package org.example.likelionspring.member.dto;
 
-public class StaffUpdateRequest {
+public class LionUpdateRequest {
     private String major;
     private int generation;
     private String part;
-    private String position;
+    private String studentId;
 
     public String getMajor() {
         return major;
@@ -30,11 +30,11 @@ public class StaffUpdateRequest {
         this.part = part;
     }
 
-    public String getPosition() {
-        return position;
+    public String getStudentId() {
+        return studentId;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
     }
 }

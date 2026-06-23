@@ -1,6 +1,6 @@
-package org.example.likelionspring.repository;
+package org.example.likelionspring.member.repository;
 
-import org.example.likelionspring.domain.Member;
+import org.example.likelionspring.member.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

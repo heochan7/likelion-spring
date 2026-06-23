@@ -1,10 +1,27 @@
-package org.example.likelionspring.dto;
+package org.example.likelionspring.member.dto;
 
-public class LionUpdateRequest {
+public class LionCreateRequest {
+    private String name;
     private String major;
     private int generation;
     private String part;
     private String studentId;
+
+    public LionCreateRequest(String name, String major, int generation, String part, String studentId) {
+        this.name = name;
+        this.major = major;
+        this.generation = generation;
+        this.part = part;
+        this.studentId = studentId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getMajor() {
         return major;
