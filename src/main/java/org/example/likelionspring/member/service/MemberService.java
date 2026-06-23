@@ -1,16 +1,18 @@
-package org.example.likelionspring.service;
+package org.example.likelionspring.member.service;
 
-import org.example.likelionspring.domain.Member;
-import org.example.likelionspring.domain.RoleType;
-import org.example.likelionspring.dto.*;
-import org.example.likelionspring.repository.MemberRepository;
+import org.example.likelionspring.member.domain.Member;
+import org.example.likelionspring.member.domain.RoleType;
+import org.example.likelionspring.member.dto.*;
+import org.example.likelionspring.member.repository.MemberRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 public class MemberService {
     private final MemberRepository repository;
 
@@ -19,6 +21,7 @@ public class MemberService {
     }
 
     // 1. Lion 등록
+    @Transactional
     public MemberResponse registerLion(LionCreateRequest req) {
         if (isDuplicateName(req.getName())) {
             return null;
@@ -39,6 +42,7 @@ public class MemberService {
     }
 
     // 2. Staff 등록
+    @Transactional
     public MemberResponse registerStaff(StaffCreateRequest req) {
         if (isDuplicateName(req.getName())) {
             return null;
@@ -59,11 +63,10 @@ public class MemberService {
     }
 
     // 3. Lion 수정
+    @Transactional
     public MemberResponse updateLion(Long id, LionUpdateRequest req) {
         Member member = repository.findById(id).orElse(null);
-        if (member == null) {
-            return null;
-        }
+        if (member == null) return null;
 
         member.updateInfo(req.getMajor(), req.getGeneration(), req.getPart());
         member.updateStudentId(req.getStudentId());
@@ -73,11 +76,10 @@ public class MemberService {
     }
 
     // 4. Staff 수정
+    @Transactional
     public MemberResponse updateStaff(Long id, StaffUpdateRequest req) {
         Member member = repository.findById(id).orElse(null);
-        if (member == null) {
-            return null;
-        }
+        if (member == null) return null;
 
         member.updateInfo(req.getMajor(), req.getGeneration(), req.getPart());
         member.updatePosition(req.getPosition());
@@ -89,18 +91,17 @@ public class MemberService {
     // 5. 단건 조회
     public MemberResponse getMember(Long id) {
         Member member = repository.findById(id).orElse(null);
-        if (member == null) {
-            return null;
-        }
+        if (member == null) return null;
+
         return MemberResponse.from(member);
     }
 
     // 6. 삭제
+    @Transactional
     public boolean deleteMember(Long id) {
         Member member = repository.findById(id).orElse(null);
-        if (member == null) {
-            return false;
-        }
+        if (member == null) return false;
+
         repository.delete(member);
         return true;
     }
@@ -108,9 +109,8 @@ public class MemberService {
     // 7. 전체 조회
     public List<MemberResponse> getAllMembers() {
         List<Member> members = repository.findAll();
-        if (members.isEmpty()) {
-            return Collections.emptyList();
-        }
+        if (members.isEmpty()) return Collections.emptyList();
+
         return members.stream()
                 .map(MemberResponse::from)
                 .collect(Collectors.toList());

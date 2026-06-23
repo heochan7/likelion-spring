@@ -1,6 +1,10 @@
-package org.example.likelionspring.domain;
+package org.example.likelionspring.member.domain;
 
 import jakarta.persistence.*;
+import org.example.likelionspring.assignment.domain.Assignment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Member {
@@ -18,6 +22,9 @@ public class Member {
 
     private String studentId;
     private String position;
+
+    @OneToMany(mappedBy = "member")
+    private List<Assignment> assignments = new ArrayList<>();
 
     protected Member() {
     }

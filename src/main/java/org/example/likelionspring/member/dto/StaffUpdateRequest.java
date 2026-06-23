@@ -1,27 +1,10 @@
-package org.example.likelionspring.dto;
+package org.example.likelionspring.member.dto;
 
-public class StaffCreateRequest {
-    private String name;
+public class StaffUpdateRequest {
     private String major;
     private int generation;
     private String part;
     private String position;
-
-    public StaffCreateRequest(String name, String major, int generation, String part, String position) {
-        this.name = name;
-        this.major = major;
-        this.generation = generation;
-        this.part = part;
-        this.position = position;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getMajor() {
         return major;

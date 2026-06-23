@@ -1,18 +1,26 @@
-package org.example.likelionspring.dto;
+package org.example.likelionspring.member.dto;
 
-public class LionCreateRequest {
+import org.example.likelionspring.member.domain.Member;
+
+public class MemberResponse {
     private String name;
     private String major;
     private int generation;
     private String part;
     private String studentId;
+    private String position;
 
-    public LionCreateRequest(String name, String major, int generation, String part, String studentId) {
-        this.name = name;
-        this.major = major;
-        this.generation = generation;
-        this.part = part;
-        this.studentId = studentId;
+    private MemberResponse(Member member){
+        this.name = member.getName();
+        this.major = member.getMajor();
+        this.generation = member.getGeneration();
+        this.part = member.getPart();
+        this.studentId = member.getStudentId();
+        this.position = member.getPosition();
+    }
+
+    public static MemberResponse from(Member member){
+        return new MemberResponse(member);
     }
 
     public String getName() {
@@ -53,5 +61,13 @@ public class LionCreateRequest {
 
     public void setStudentId(String studentId) {
         this.studentId = studentId;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 }
