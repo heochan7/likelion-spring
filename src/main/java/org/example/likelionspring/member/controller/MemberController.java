@@ -20,19 +20,17 @@ public class MemberController {
 
     // 전체 조회
     @GetMapping
-    public ResponseEntity<List<MemberResponse>> getMembers() {
-        List<MemberResponse> members = memberService.getAllMembers();
-        if(members.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(members);
-
-        return ResponseEntity.ok(members);
+    public ResponseEntity<List<MemberResponse>> getMembers(@RequestParam(required = false) String part) {
+        if(part != null && !part.trim().isEmpty()){
+            return ResponseEntity.ok(memberService.getMemberByPart(part));
+        }
+        return ResponseEntity.ok(memberService.getAllMembers());
     }
 
     // ID로 단건 조회
     @GetMapping("/{id}")
     public ResponseEntity<MemberResponse> getMemberById(@PathVariable Long id) {
         MemberResponse response = memberService.getMember(id);
-        if(response == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-
         return ResponseEntity.ok(response);
     }
 
@@ -40,8 +38,6 @@ public class MemberController {
     @PostMapping("/lions")
     public ResponseEntity<MemberResponse> createLion(@RequestBody LionCreateRequest request) {
         MemberResponse response = memberService.registerLion(request);
-        if(response == null) return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -49,8 +45,6 @@ public class MemberController {
     @PostMapping("/staffs")
     public ResponseEntity<MemberResponse> createStaff(@RequestBody StaffCreateRequest request) {
         MemberResponse response = memberService.registerStaff(request);
-        if(response == null) return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -58,8 +52,6 @@ public class MemberController {
     @PutMapping("/lions/{id}")
     public ResponseEntity<MemberResponse> updateLion(@PathVariable Long id, @RequestBody LionUpdateRequest request) {
         MemberResponse response = memberService.updateLion(id, request);
-        if(response == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-
         return ResponseEntity.ok(response);
     }
 
@@ -67,8 +59,6 @@ public class MemberController {
     @PutMapping("/staffs/{id}")
     public ResponseEntity<MemberResponse> updateStaff(@PathVariable Long id, @RequestBody StaffUpdateRequest request) {
         MemberResponse response = memberService.updateStaff(id, request);
-        if(response == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-
         return ResponseEntity.ok(response);
     }
 
@@ -76,8 +66,8 @@ public class MemberController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMember(@PathVariable Long id) {
         boolean response = memberService.deleteMember(id);
-        if(! response) return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
+
+    //
 }

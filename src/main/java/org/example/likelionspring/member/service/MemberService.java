@@ -1,12 +1,13 @@
 package org.example.likelionspring.member.service;
 
+import org.example.likelionspring.global.exception.DuplicateMemberException;
+import org.example.likelionspring.global.exception.MemberNotFoundException;
 import org.example.likelionspring.member.domain.Member;
 import org.example.likelionspring.member.domain.RoleType;
 import org.example.likelionspring.member.dto.*;
 import org.example.likelionspring.member.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,8 +24,9 @@ public class MemberService {
     // 1. Lion 등록
     @Transactional
     public MemberResponse registerLion(LionCreateRequest req) {
+        // 중복 시 null 반환 대신 예외 발생 (409)
         if (isDuplicateName(req.getName())) {
-            return null;
+            throw new DuplicateMemberException("이미 존재하는 이름입니다: " + req.getName());
         }
 
         Member lion = new Member(
@@ -44,8 +46,9 @@ public class MemberService {
     // 2. Staff 등록
     @Transactional
     public MemberResponse registerStaff(StaffCreateRequest req) {
+        // 중복 시 null 반환 대신 예외 발생 (409)
         if (isDuplicateName(req.getName())) {
-            return null;
+            throw new DuplicateMemberException("이미 존재하는 이름입니다: " + req.getName());
         }
 
         Member staff = new Member(
@@ -65,8 +68,9 @@ public class MemberService {
     // 3. Lion 수정
     @Transactional
     public MemberResponse updateLion(Long id, LionUpdateRequest req) {
-        Member member = repository.findById(id).orElse(null);
-        if (member == null) return null;
+        // orElseThrow를 사용해 없을 경우 바로 예외 던짐 (404)
+        Member member = repository.findById(id)
+                .orElseThrow(() -> new MemberNotFoundException("해당 회원을 찾을 수 없습니다. ID: " + id));
 
         member.updateInfo(req.getMajor(), req.getGeneration(), req.getPart());
         member.updateStudentId(req.getStudentId());
@@ -78,8 +82,9 @@ public class MemberService {
     // 4. Staff 수정
     @Transactional
     public MemberResponse updateStaff(Long id, StaffUpdateRequest req) {
-        Member member = repository.findById(id).orElse(null);
-        if (member == null) return null;
+        // orElseThrow를 사용해 없을 경우 바로 예외 던짐 (404)
+        Member member = repository.findById(id)
+                .orElseThrow(() -> new MemberNotFoundException("해당 회원을 찾을 수 없습니다. ID: " + id));
 
         member.updateInfo(req.getMajor(), req.getGeneration(), req.getPart());
         member.updatePosition(req.getPosition());
@@ -90,8 +95,9 @@ public class MemberService {
 
     // 5. 단건 조회
     public MemberResponse getMember(Long id) {
-        Member member = repository.findById(id).orElse(null);
-        if (member == null) return null;
+        // 조회 실패 시 예외 던짐 (404)
+        Member member = repository.findById(id)
+                .orElseThrow(() -> new MemberNotFoundException("해당 회원을 찾을 수 없습니다. ID: " + id));
 
         return MemberResponse.from(member);
     }
@@ -99,8 +105,9 @@ public class MemberService {
     // 6. 삭제
     @Transactional
     public boolean deleteMember(Long id) {
-        Member member = repository.findById(id).orElse(null);
-        if (member == null) return false;
+        // 삭제 대상을 찾지 못하면 예외 던짐 (404)
+        Member member = repository.findById(id)
+                .orElseThrow(() -> new MemberNotFoundException("해당 회원을 찾을 수 없습니다. ID: " + id));
 
         repository.delete(member);
         return true;
@@ -109,6 +116,16 @@ public class MemberService {
     // 7. 전체 조회
     public List<MemberResponse> getAllMembers() {
         List<Member> members = repository.findAll();
+        if (members.isEmpty()) return Collections.emptyList();
+
+        return members.stream()
+                .map(MemberResponse::from)
+                .collect(Collectors.toList());
+    }
+
+    // 8. 파트별 조회
+    public List<MemberResponse> getMemberByPart(String part){
+        List<Member> members = repository.findByPart(part);
         if (members.isEmpty()) return Collections.emptyList();
 
         return members.stream()

@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
     List<Assignment> findByMemberId(Long memberId);
+
+    List<Assignment> findByTitleContaining(String keyword);
 }
